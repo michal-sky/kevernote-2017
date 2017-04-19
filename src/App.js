@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import ActionBar from './ActionBar.js';
+import NoteList from './NoteList.js';
+import NoteView from './NoteView.js';
+
 // import R from 'ramda';
 // import api from './api';
 
@@ -6,35 +10,27 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      something: false,
-      // sets some initial state
+      selected_note: 0,
+      notes: [{title: 'example', text: 'I am a note', id: 0}, {title: 'note2', text: '1234567890 12345678901234567890123 45678901234567 890123456789012345 67890123456789 0123456789012345 678901234567890', id:1}]
     };
 
-    this.doSomething = this.doSomething.bind(this);
+    this.selectNote = this.selectNote.bind(this);
   }
 
   componentDidMount() {
     // when mount
   }
 
-  doSomething() {
-    // sets some new state
-    this.setState({ something: !this.state.something });
+  selectNote(id) {
+    this.setState({ selected_note: id });
   }
 
   render() {
-    const {
-      something,
-      // gets some vars from state
-    } = this.state;
-
     return (
       <div>
-        <h1>
-          Hello Kevernote 2017
-        </h1>
-        <button onClick={this.doSomething}>Do something</button>
-        {something && <h2>I did something!</h2>}
+        <ActionBar/>
+        <NoteList notes={ this.state.notes } selected_note={ this.state.selected_note } selectNote ={ this.selectNote } />
+        <NoteView note={ this.state.notes.filter(note => note.id == this.state.selected_note)[0]} />
       </div>
     );
   }
