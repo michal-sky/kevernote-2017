@@ -13,7 +13,8 @@ export default class App extends Component {
     this.state = {
       notes: null,
       selectedNote: null,
-      newNoteEnabled: false
+      newNoteEnabled: false,
+      changesPending: false
     }
 
     this.addNote = this.addNote.bind(this);
@@ -57,7 +58,8 @@ export default class App extends Component {
     selectedNote.body =  event.target.value;
 
     this.setState({
-      selectedNote: selectedNote
+      selectedNote: selectedNote,
+      changesPending: true
     });
     api.notes.update(selectedNote.id, selectedNote);
   }
@@ -67,14 +69,13 @@ export default class App extends Component {
     selectedNote.title = event.target.value;
 
     this.setState({
-      selectedNote: selectedNote
+      selectedNote: selectedNote,
+      changesPending: true
     });
     api.notes.update(selectedNote.id, selectedNote);
   }
 
   addNote() {
-    console.log("new note!");
-
     const ids = this.state.notes.map((note) => note.id);
     const newId = Math.max(...ids) + 1;
 
@@ -82,7 +83,7 @@ export default class App extends Component {
         id: newId,
         title: 'New note',
         body: 'Write your note here',
-        time: new Date().getTime()
+        createdAt: new Date().getTime()
     };
 
     this.clearSelection();
@@ -124,7 +125,8 @@ export default class App extends Component {
         <NoteView note={this.state.selectedNote}
                   handleSelectedTitleChange={this.handleSelectedTitleChange}
                   handleSelectedBodyChange={this.handleSelectedBodyChange}
-                  deleteSelected={this.deleteSelected} />
+                  deleteSelected={this.deleteSelected}
+                  changesPending={this.state.changesPending} />
       </div>
     );
   }

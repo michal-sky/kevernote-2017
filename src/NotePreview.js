@@ -1,4 +1,5 @@
 import React from 'react';
+import TimeAgo from 'react-timeago';
 
 export default function NotePreview(props) {
   const {
@@ -9,16 +10,17 @@ export default function NotePreview(props) {
   const {
     body,
     link,
-    time,
+    createdAt,
     title
   } = note;
 
-  // TODO: abbreviated body
+  const abbreviatedBody = body.length > 100 ? (body.substr(0,97) + "...") : body;
+
   return (
     <a className="note-preview__link" href={link} onClick={() => selectNote(note)}>
-      <span className="note-preview__time">{time}</span>
+      <TimeAgo className="note-preview__time" date={createdAt} />
       <h2 className="note-preview__title">{title}</h2>
-      <p className="note-preview__body">{body}</p>
+      <p className="note-preview__body">{abbreviatedBody}</p>
     </a>
   );
 }
