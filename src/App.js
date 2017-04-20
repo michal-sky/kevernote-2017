@@ -141,7 +141,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className="app">
         <ActionBar addNote={this.addNote}
                    addNoteEnabled={this.state.addNoteEnabled} />
         <NoteList notes={this.state.notes}
