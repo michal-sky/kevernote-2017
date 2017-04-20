@@ -3,7 +3,6 @@ import ActionBar from './ActionBar';
 import NoteList from './NoteList';
 import NoteView from './NoteView';
 
-// import R from 'ramda';
 import api from './api';
 
 export default class App extends Component {
@@ -11,20 +10,26 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      notes: null,
+      addNoteEnabled: false,
+      notes: [],
       selectedNote: null,
-      newNoteEnabled: false,
-      changesPending: false
+      persistenceStatus: null
     }
 
     this.addNote = this.addNote.bind(this);
     this.selectNote = this.selectNote.bind(this);
     this.handleSelectedBodyChange = this.handleSelectedBodyChange.bind(this);
     this.handleSelectedTitleChange = this.handleSelectedTitleChange.bind(this);
-    this.addNote = this.addNote.bind(this);
-    this.deleteSelected = this.deleteSelected.bind(this);
+    this.deleteSelectedNote = this.deleteSelectedNote.bind(this);
+    this.updateSelectedNote = this.updateSelectedNote.bind(this);
 
     this.updateNotes();
+    this.resetPersistenceTimeout();
+  }
+
+  resetPersistenceTimeout() {
+    clearTimeout(this.timeoutID);
+    this.timeoutID = setTimeout(this.updateSelectedNote, 2000);
   }
 
   updateNotes() {
@@ -59,9 +64,10 @@ export default class App extends Component {
 
     this.setState({
       selectedNote: selectedNote,
-      changesPending: true
+      persistenceStatus: "Editing"
     });
-    api.notes.update(selectedNote.id, selectedNote);
+
+    this.resetPersistenceTimeout();
   }
 
   handleSelectedTitleChange(event) {
@@ -70,9 +76,24 @@ export default class App extends Component {
 
     this.setState({
       selectedNote: selectedNote,
-      changesPending: true
+      persistenceStatus: "Editing"
     });
-    api.notes.update(selectedNote.id, selectedNote);
+
+    this.resetPersistenceTimeout();
+  }
+
+  updateSelectedNote() {
+    const selectedNote = this.state.selectedNote;
+
+    this.setState({
+      persistenceStatus: "Saving"
+    })
+
+    api.notes.update(selectedNote.id, selectedNote).then(() =>
+      this.setState({
+        persistenceStatus: "Saved"
+      })
+    );
   }
 
   addNote() {
@@ -93,17 +114,17 @@ export default class App extends Component {
 
   disableNewNote() {
     this.setState({
-      newNoteEnabled: false
+      addNoteEnabled: false
     })
   }
 
   enableNewNote() {
     this.setState({
-      newNoteEnabled: true
+      addNoteEnabled: true
     })
   }
 
-  deleteSelected() {
+  deleteSelectedNote() {
     const selectedNote = this.state.selectedNote;
 
     if (!selectedNote) {
@@ -118,15 +139,15 @@ export default class App extends Component {
     return (
       <div>
         <ActionBar addNote={this.addNote}
-                   addNoteEnabled={this.state.newNoteEnabled} />
+                   addNoteEnabled={this.state.addNoteEnabled} />
         <NoteList notes={this.state.notes}
                   selectedNote={this.state.selectedNote}
                   selectNote={this.selectNote} />
         <NoteView note={this.state.selectedNote}
                   handleSelectedTitleChange={this.handleSelectedTitleChange}
                   handleSelectedBodyChange={this.handleSelectedBodyChange}
-                  deleteSelected={this.deleteSelected}
-                  changesPending={this.state.changesPending} />
+                  deleteSelectedNote={this.deleteSelectedNote}
+                  persistenceStatus={this.state.persistenceStatus} />
       </div>
     );
   }

@@ -5,17 +5,15 @@ export default function NoteView(props) {
       note,
       handleSelectedTitleChange,
       handleSelectedBodyChange,
-      deleteSelected,
-      changesPending
+      deleteSelectedNote,
+      persistenceStatus
   } = props;
-
-  const changesPendingText = note ? (changesPending ? "Editing" : "Saved") : null;
 
   return (
     <article className="note-view">
       <nav className="note-view__actions">
-        <button className="note-view__actions__trash" onClick={(deleteSelected)}></button>
-        <span className="note-view__actions__status">{changesPendingText}</span>
+        <button className="note-view__actions__trash" onClick={(deleteSelectedNote)}></button>
+        <span className="note-view__actions__status">{persistenceStatus}</span>
       </nav>
       <input className="note-view__title" value={(note && note.title) || "Loading.."} onChange={handleSelectedTitleChange}></input>
       <textarea className="note-view__body" value={(note && note.body) || "Loading.."} onChange={handleSelectedBodyChange}></textarea>
