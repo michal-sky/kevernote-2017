@@ -29,7 +29,7 @@ export default class App extends Component {
 
   setNoteText(id, text) {
     let new_notes = this.state.notes.map(n => {
-      if (n.id == id) {
+      if (n.id === id) {
         return {title: n.title, id: n.id, text: text};
       }else {
         return n;
@@ -39,7 +39,7 @@ export default class App extends Component {
   }
   setNoteTitle(id, title) {
     let new_notes = this.state.notes.map(n => {
-      if (n.id == id) {
+      if (n.id === id) {
         return {title: title, id: n.id, text: n.text};
       }else {
         return n;
@@ -51,9 +51,9 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <ActionBar/>
-        <NoteList notes={ this.state.notes } selected_note={ this.state.selected_note } selectNote ={ this.selectNote } />
-        <NoteView note={ this.state.notes.filter(note => note.id == this.state.selected_note)[0]} setNoteTitle={ this.setNoteTitle } setNoteText={ this.setNoteText } />
+        <ActionBar notes={ this.state.notes } selectNote={ this.selectNote }/>
+        <NoteList notes={ this.state.notes } selected_note={ this.state.selected_note } selectNote={ this.selectNote } />
+        <NoteView note={ this.state.notes.filter(note => note.id === this.state.selected_note)[0]} setNoteTitle={ this.setNoteTitle } setNoteText={ this.setNoteText } />
       </div>
     );
   }

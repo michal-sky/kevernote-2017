@@ -3,10 +3,6 @@ import React, { Component } from 'react';
 // import api from './api';
 
 export default class NoteView extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     // when mount
   }

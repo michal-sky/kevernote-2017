@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 
 function NotePreview({note, selected_note, selectNote}) {
   let classes = "note-preview"
-  if (note.id == selected_note) {
+  if (note.id === selected_note) {
     classes += ' is-selected'
   }
   return (
