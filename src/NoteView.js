@@ -11,6 +11,7 @@ export default function NoteView(props) {
 
   const title = note ? note.title : "Loading..";
   const body = note ? note.body : "Loading..";
+  const actualPersistenceStatus = persistenceStatus || "Loading..";
 
   return (
     <article className="note-view">
@@ -18,7 +19,7 @@ export default function NoteView(props) {
         <button className="note-view__actions__trash"
                 onClick={(deleteSelectedNote)} />
         <span className="note-view__actions__status">
-          {persistenceStatus}
+          {actualPersistenceStatus}
         </span>
       </nav>
       <input className="note-view__title"

@@ -29,21 +29,14 @@ export default class App extends Component {
 
   updateNotes() {
     api.notes.all().then(notes => this.setNotes(notes))
+                   .then(() => this.resetSelectedNote())
                    .then(() => this.enableNewNote());
   }
 
   setNotes(notes) {
-    const selectedNote = this.state.selectedNote || notes[0];
-
     this.setState({
-      notes: notes,
-      selectedNote: selectedNote
+      notes: notes
     })
-  }
-
-  resetPersistenceTimeout() {
-    clearTimeout(this.timeoutID);
-    this.timeoutID = setTimeout(this.updateSelectedNote, 2000);
   }
 
   selectNote(note) {
@@ -52,42 +45,10 @@ export default class App extends Component {
     });
   }
 
-  handleSelectedBodyChange(event) {
-    const selectedNote = this.state.selectedNote;
-    selectedNote.body =  event.target.value;
-
+  resetSelectedNote() {
     this.setState({
-      selectedNote: selectedNote,
-      persistenceStatus: "Editing"
-    });
-
-    this.resetPersistenceTimeout();
-  }
-
-  handleSelectedTitleChange(event) {
-    const selectedNote = this.state.selectedNote;
-    selectedNote.title = event.target.value;
-
-    this.setState({
-      selectedNote: selectedNote,
-      persistenceStatus: "Editing"
-    });
-
-    this.resetPersistenceTimeout();
-  }
-
-  updateSelectedNote() {
-    const selectedNote = this.state.selectedNote;
-
-    this.setState({
-      persistenceStatus: "Saving"
+      selectedNote: this.state.selectedNote || this.state.notes[0]
     })
-
-    api.notes.update(selectedNote.id, selectedNote).then(() =>
-      this.setState({
-        persistenceStatus: "Saved"
-      })
-    );
   }
 
   addNote() {
@@ -103,7 +64,67 @@ export default class App extends Component {
 
     this.selectNote(null);
     this.disableNewNote();
-    api.notes.create(newNote).then(() => this.updateNotes());
+    api.notes.create(newNote)
+             .then(() => this.updateNotes());
+  }
+
+  deleteSelectedNote() {
+    const selectedNote = this.state.selectedNote;
+
+    if (!selectedNote) {
+      return;
+    }
+
+    this.selectNote(null);
+    this.disableNewNote();
+    api.notes.delete(selectedNote.id)
+             .then(() => this.updateNotes());
+  }
+
+  updateSelectedNote() {
+    const selectedNote = this.state.selectedNote;
+
+    if (!selectedNote) {
+      return;
+    }
+
+    this.setPersistenceStatus("Saving");
+    api.notes.update(selectedNote.id, selectedNote)
+             .then(() => this.setPersistenceStatus("Saved"));
+  }
+
+  setPersistenceStatus(status) {
+    this.setState({
+      persistenceStatus: status
+    })
+  }
+
+  resetPersistenceTimeout() {
+    clearTimeout(this.timeoutID);
+    this.timeoutID = setTimeout(this.updateSelectedNote, 2000);
+  }
+
+  handleSelectedBodyChange(event) {
+    const selectedNote = this.state.selectedNote;
+    selectedNote.body =  event.target.value;
+
+    this.handleSelectedChange(selectedNote);
+  }
+
+  handleSelectedTitleChange(event) {
+    const selectedNote = this.state.selectedNote;
+    selectedNote.title = event.target.value;
+
+    this.handleSelectedChange(selectedNote);
+  }
+
+  handleSelectedChange(newSelected) {
+    this.setState({
+      selectedNote: newSelected,
+      persistenceStatus: "Editing"
+    });
+
+    this.resetPersistenceTimeout();
   }
 
   disableNewNote() {
@@ -116,17 +137,6 @@ export default class App extends Component {
     this.setState({
       addNoteEnabled: true
     })
-  }
-
-  deleteSelectedNote() {
-    const selectedNote = this.state.selectedNote;
-
-    if (!selectedNote) {
-      return;
-    }
-
-    this.selectNote(null);
-    api.notes.delete(selectedNote.id).then(() => this.updateNotes());
   }
 
   render() {
