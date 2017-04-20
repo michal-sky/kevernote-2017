@@ -11,16 +11,12 @@ export default class ActionBar extends Component {
     // when mount
   }
 
-  doSomething() {
-    // sets some new state
-    this.setState({ something: !this.state.something });
-  }
-
   render() {
     return (
-      <div className="action-bar">
+      <nav className="action-bar">
         <div className="action-bar__logo"/>
-        </div>
+        <button className="action-bar__new">+</button>
+      </nav>
     );
   }
 }
