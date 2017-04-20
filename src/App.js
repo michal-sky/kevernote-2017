@@ -17,6 +17,7 @@ export default class App extends Component {
     this.selectNote = this.selectNote.bind(this);
     this.setNoteTitle = this.setNoteTitle.bind(this);
     this.setNoteText = this.setNoteText.bind(this);
+    this.addNewNote = this.addNewNote.bind(this);
   }
 
   componentDidMount() {
@@ -25,6 +26,13 @@ export default class App extends Component {
 
   selectNote(id) {
     this.setState({ selected_note: id });
+  }
+
+  addNewNote() {
+    let new_note_id = Math.floor(Math.random() * 1000000);
+    let note = {title: 'New note', text: 'Write your note here', id: new_note_id}
+    let new_notes = [note, ...this.state.notes];
+    this.setState({ notes: new_notes, selected_note: new_note_id })
   }
 
   setNoteText(id, text) {
@@ -51,7 +59,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <ActionBar notes={ this.state.notes } selectNote={ this.selectNote }/>
+        <ActionBar notes={ this.state.notes } addNewNote={ this.addNewNote }/>
         <NoteList notes={ this.state.notes } selected_note={ this.state.selected_note } selectNote={ this.selectNote } />
         <NoteView note={ this.state.notes.filter(note => note.id === this.state.selected_note)[0]} setNoteTitle={ this.setNoteTitle } setNoteText={ this.setNoteText } />
       </div>
