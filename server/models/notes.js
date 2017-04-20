@@ -4,13 +4,13 @@ const notes = [
   {
     id: 2,
     title: 'Note 2',
-    body: 'Bax Quum',
+    text: 'Bax Quum',
     createdAt: 1448649681080,
   },
   {
     id: 1,
     title: 'Note 1',
-    body: 'Foo Bar Baz',
+    text: 'Foo Bar Baz',
     createdAt: 1448649671080,
   },
 ];

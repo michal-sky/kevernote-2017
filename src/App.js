@@ -4,20 +4,41 @@ import NoteList from './NoteList.js';
 import NoteView from './NoteView.js';
 
 // import R from 'ramda';
-// import api from './api';
+import api from './api';
+
+function getSelectedNote(notes, selectedNoteId) {
+ if (selectedNoteId == null) {
+   return{ title: '', text: '' };
+ } else {
+   return notes.filter(note => note.id === selectedNoteId)[0]
+ }
+}
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected_note: 0,
-      notes: [{title: 'example', text: 'I am a note', id: 0}, {title: 'note2', text: '1234567890 12345678901234567890123 45678901234567 890123456789012345 67890123456789 0123456789012345 678901234567890', id:1}]
+      notes: [],
+      selected_note: null
     };
 
     this.selectNote = this.selectNote.bind(this);
+
     this.setNoteTitle = this.setNoteTitle.bind(this);
     this.setNoteText = this.setNoteText.bind(this);
     this.addNewNote = this.addNewNote.bind(this);
+    this.getNotes = this.getNotes.bind(this);
+
+    this.getNotes();
+  }
+
+  getNotes() {
+    api.notes.all().then((notes) => {
+      this.setState({
+        notes: notes,
+        selected_note:notes[0].id
+      })
+    })
   }
 
   componentDidMount() {
@@ -33,22 +54,29 @@ export default class App extends Component {
     let note = {title: 'New note', text: 'Write your note here', id: new_note_id}
     let new_notes = [note, ...this.state.notes];
     this.setState({ notes: new_notes, selected_note: new_note_id })
+
+    api.notes.create(note)
   }
 
   setNoteText(id, text) {
     let new_notes = this.state.notes.map(n => {
       if (n.id === id) {
-        return {title: n.title, id: n.id, text: text};
+        let note = {title: n.title, id: n.id, text: text}
+        api.notes.update(id, note)
+        return note;
       }else {
         return n;
       }
     });
+
     this.setState({ notes: new_notes });
   }
   setNoteTitle(id, title) {
     let new_notes = this.state.notes.map(n => {
       if (n.id === id) {
-        return {title: title, id: n.id, text: n.text};
+        let note = {title: title, id: n.id, text: n.text};
+        api.notes.update(id, note)
+        return note;
       }else {
         return n;
       }
@@ -61,7 +89,7 @@ export default class App extends Component {
       <div>
         <ActionBar notes={ this.state.notes } addNewNote={ this.addNewNote }/>
         <NoteList notes={ this.state.notes } selected_note={ this.state.selected_note } selectNote={ this.selectNote } />
-        <NoteView note={ this.state.notes.filter(note => note.id === this.state.selected_note)[0]} setNoteTitle={ this.setNoteTitle } setNoteText={ this.setNoteText } />
+        <NoteView note={ getSelectedNote(this.state.notes, this.state.selected_note)} setNoteTitle={ this.setNoteTitle } setNoteText={ this.setNoteText } />
       </div>
     );
   }
