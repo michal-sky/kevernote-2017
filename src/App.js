@@ -15,6 +15,8 @@ export default class App extends Component {
     };
 
     this.selectNote = this.selectNote.bind(this);
+    this.setNoteTitle = this.setNoteTitle.bind(this);
+    this.setNoteText = this.setNoteText.bind(this);
   }
 
   componentDidMount() {
@@ -25,12 +27,33 @@ export default class App extends Component {
     this.setState({ selected_note: id });
   }
 
+  setNoteText(id, text) {
+    let new_notes = this.state.notes.map(n => {
+      if (n.id == id) {
+        return {title: n.title, id: n.id, text: text};
+      }else {
+        return n;
+      }
+    });
+    this.setState({ notes: new_notes });
+  }
+  setNoteTitle(id, title) {
+    let new_notes = this.state.notes.map(n => {
+      if (n.id == id) {
+        return {title: title, id: n.id, text: n.text};
+      }else {
+        return n;
+      }
+    });
+    this.setState({ notes: new_notes });
+  }
+
   render() {
     return (
       <div>
         <ActionBar/>
         <NoteList notes={ this.state.notes } selected_note={ this.state.selected_note } selectNote ={ this.selectNote } />
-        <NoteView note={ this.state.notes.filter(note => note.id == this.state.selected_note)[0]} />
+        <NoteView note={ this.state.notes.filter(note => note.id == this.state.selected_note)[0]} setNoteTitle={ this.setNoteTitle } setNoteText={ this.setNoteText } />
       </div>
     );
   }
