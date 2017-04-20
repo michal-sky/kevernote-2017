@@ -8,6 +8,9 @@ export default function NoteList(props){
       selectNote
   } = props;
 
+  const noteCount = (notes && notes.length) || 0;
+  const noteItems = notes && notes.map((note) => createNotePreview(note));
+
   var createNotePreview = function(note) {
     const isSelected = selectedNote && note.id === selectedNote.id;
     const className = isSelected ? "note-preview is-selected" : "note-preview";
@@ -16,10 +19,6 @@ export default function NoteList(props){
       <NotePreview note={note} selectNote={selectNote}/>
     </li>;
   }
-
-  const noteItems = notes && notes.map((note) => createNotePreview(note));
-
-  const noteCount = (notes && notes.length) || 0;
 
   return (
     <aside className="note-list">
