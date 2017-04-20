@@ -17,12 +17,14 @@ export default class App extends Component {
 
     this.notes = null;
     this.selectedNote = null;
+    this.newNoteEnabled = false;
 
     this.addNote = this.addNote.bind(this);
     this.selectNote = this.selectNote.bind(this);
     this.handleSelectedBodyChange = this.handleSelectedBodyChange.bind(this);
     this.handleSelectedTitleChange = this.handleSelectedTitleChange.bind(this);
     this.addNote = this.addNote.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
 
     this.updateNotes();
   }
@@ -50,8 +52,8 @@ export default class App extends Component {
     });
   }
 
-  selectNoteById(id) {
-    this.selectedNote = this. notes.find((note) => note.id === id);
+  clearSelection() {
+    this.selectedNote = null;
 
     this.setState({
       selectedNote: this.selectedNote
@@ -85,24 +87,36 @@ export default class App extends Component {
         time: 'FOO BAR'
     };
 
-    api.notes.create(newNote).then(() => this.updateNotes())
-                             .then(() => this.selectNoteById(newId));
+    this.clearSelection();
+    this.disableNewNote();
+    api.notes.create(newNote).then(() => this.updateNotes());
+  }
+
+  disableNewNote() {
+    this.newNoteEnabled = false;
   }
 
   enableNewNote() {
-    console.log("enable!");
+    this.newNoteEnabled = true;
+  }
+
+  deleteNote(note) {
+    this.clearSelection();
+    api.notes.delete(note.id).then(() => this.updateNotes());
   }
 
   render() {
     return (
       <div>
-        <ActionBar addNote={this.addNote} />
+        <ActionBar addNote={this.addNote}
+                   addNoteEnabled={this.newNoteEnabled}/>
         <NoteList notes={this.state.notes}
                   selectedNote={this.state.selectedNote}
                   selectNote={this.selectNote} />
         <NoteView note={this.state.selectedNote}
                   handleSelectedTitleChange={this.handleSelectedTitleChange}
-                  handleSelectedBodyChange={this.handleSelectedBodyChange} />
+                  handleSelectedBodyChange={this.handleSelectedBodyChange}
+                  deleteNote={this.deleteNote} />
       </div>
     );
   }
