@@ -27,11 +27,6 @@ export default class App extends Component {
     this.resetPersistenceTimeout();
   }
 
-  resetPersistenceTimeout() {
-    clearTimeout(this.timeoutID);
-    this.timeoutID = setTimeout(this.updateSelectedNote, 2000);
-  }
-
   updateNotes() {
     api.notes.all().then(notes => this.setNotes(notes))
                    .then(() => this.enableNewNote());
@@ -46,15 +41,14 @@ export default class App extends Component {
     })
   }
 
+  resetPersistenceTimeout() {
+    clearTimeout(this.timeoutID);
+    this.timeoutID = setTimeout(this.updateSelectedNote, 2000);
+  }
+
   selectNote(note) {
     this.setState({
       selectedNote: note
-    });
-  }
-
-  clearSelection() {
-    this.setState({
-      selectedNote: null
     });
   }
 
@@ -107,7 +101,7 @@ export default class App extends Component {
         createdAt: new Date().getTime()
     };
 
-    this.clearSelection();
+    this.selectNote(null);
     this.disableNewNote();
     api.notes.create(newNote).then(() => this.updateNotes());
   }
@@ -131,7 +125,7 @@ export default class App extends Component {
       return;
     }
 
-    this.clearSelection();
+    this.selectNote(null);
     api.notes.delete(selectedNote.id).then(() => this.updateNotes());
   }
 
