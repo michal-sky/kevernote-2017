@@ -9,14 +9,24 @@ export default function NoteView(props) {
       persistenceStatus
   } = props;
 
+  const title = note ? note.title : "Loading..";
+  const body = note ? note.body : "Loading..";
+
   return (
     <article className="note-view">
       <nav className="note-view__actions">
-        <button className="note-view__actions__trash" onClick={(deleteSelectedNote)}></button>
-        <span className="note-view__actions__status">{persistenceStatus}</span>
+        <button className="note-view__actions__trash"
+                onClick={(deleteSelectedNote)} />
+        <span className="note-view__actions__status">
+          {persistenceStatus}
+        </span>
       </nav>
-      <input className="note-view__title" value={(note && note.title) || "Loading.."} onChange={handleSelectedTitleChange}></input>
-      <textarea className="note-view__body" value={(note && note.body) || "Loading.."} onChange={handleSelectedBodyChange}></textarea>
+      <input className="note-view__title"
+             value={title}
+             onChange={handleSelectedTitleChange} />
+      <textarea className="note-view__body"
+                value={body}
+                onChange={handleSelectedBodyChange} />
     </article>
   );
 }
