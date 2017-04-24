@@ -25,39 +25,31 @@ const matchPath = (path, currentPath) => {
 
   const [url, ...values] = match;
 
-  return keys.reduce(
-    (memo, key, index) => {
-      memo[key.name] = values[index];
-      return memo;
-    },
-    {}
-  );
+  return keys.reduce((memo, key, index) => {
+    memo[key.name] = values[index];
+    return memo;
+  }, {});
 };
 
-const match = req =>
-  ([method, path]) => {
-    console.log('match:', req.method, method, '|||', path, req.url);
-    return (method === '*' || toLower(req.method) === toLower(method)) && matchPath(path, req.url);
-  };
+const match = req => ([method, path]) => {
+  return (method === '*' || toLower(req.method) === toLower(method)) && matchPath(path, req.url);
+};
 
 const routify = (name, topic) =>
-  map(
-    key => {
-      switch (key) {
-        case 'all':
-          return ['get', `/${name}`, topic.all];
-        case 'get':
-          return ['get', `/${name}/:id`, topic.get];
-        case 'create':
-          return ['post', `/${name}`, topic.create];
-        case 'update':
-          return ['put', `/${name}/:id`, topic.update];
-        case 'delete':
-          return ['delete', `/${name}/:id`, topic.delete];
-      }
-    },
-    keys(topic)
-  );
+  map(key => {
+    switch (key) {
+      case 'all':
+        return ['get', `/${name}`, topic.all];
+      case 'get':
+        return ['get', `/${name}/:id`, topic.get];
+      case 'create':
+        return ['post', `/${name}`, topic.create];
+      case 'update':
+        return ['put', `/${name}/:id`, topic.update];
+      case 'delete':
+        return ['delete', `/${name}/:id`, topic.delete];
+    }
+  }, keys(topic));
 
 const restify = resource => ({
   all: context => {
@@ -81,7 +73,6 @@ const restify = resource => ({
     });
   },
   delete: (context, { id }) => {
-    console.log('DELETING ID: ', id, resource.delete);
     resource.delete(id).then(ok => {
       r.sendJSON({ ok }, context);
     });

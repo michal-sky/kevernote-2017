@@ -5393,9 +5393,9 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-zealot-core@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/zealot-core/-/zealot-core-0.0.3.tgz#e86b16563faa1448c3082499347496f55128f11c"
+zealot-core@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/zealot-core/-/zealot-core-0.0.4.tgz#db6827500cacf228047406d1361f040be26d6d5b"
   dependencies:
     flyd "^0.2.4"
     folktale "^2.0.0-alpha3"
