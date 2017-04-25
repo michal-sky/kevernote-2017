@@ -10,7 +10,7 @@ const notes = [
   {
     id: 1,
     title: 'Note 1',
-    body: 'Foo Bar Baz',
+    body: 'Foo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar BazFoo Bar Baz',
     createdAt: 1448649671080,
   },
 ];
